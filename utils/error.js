@@ -14,28 +14,28 @@ class ServiceError extends Error {
 
 exports.ForbiddenError = class extends ServiceError {
   constructor(message = "暂无权限") {
-    super(message, 401);
+    super(401, message);
   }
 };
 exports.UploadError = class extends ServiceError {
   constructor(message = "文件上传错误") {
-    super(message, 413);
+    super(413, message);
   }
 };
 exports.ValidationError = class extends ServiceError {
   constructor(message = "验证失败") {
-    super(message, 406);
+    super(406, message);
   }
 };
 exports.NotFoundError = class extends ServiceError {
   constructor() {
-    super("not found", 404);
+    super(404, "not found");
   }
 };
 // 未知错误
 exports.UnknownError = class extends ServiceError {
   constructor() {
-    super("server internal error", 500);
+    super(500, "server internal error");
   }
 };
 
