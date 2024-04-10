@@ -3,27 +3,35 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const createError = require("http-errors");
-
+const { expressjwt: jwt } = require("express-jwt");
 const app = express();
+
 const {
   ServiceError,
   ForbiddenError,
   UnknownError,
 } = require("../utils/error");
-
+const whiteList = require("./whiteList");
 // ------------------------------------------------------------引入路由
-const testRouter = require("./api/blogs");
+const blogsRouter = require("./api/blogs");
+const adminRouter = require("./api/admin");
 // ------------------------------------------------------------使用各种中间件
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  jwt({
+    secret: "xxx",
+    algorithms: ["HS256"],
+  }).unless({
+    path: whiteList,
+  })
+);
 // ------------------------------------------------------------自定义路由
-
-// 文章相关
-app.use("/blogs", testRouter);
-
+app.use("/blogs", blogsRouter);
+app.use("/admin", adminRouter);
 // ------------------------------------------------------------自定义错误处理
 app.use(function (req, res, next) {
   next(createError(404));
@@ -31,8 +39,9 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   console.log("err.name>>>", err.name);
   console.log("err.message>>>", err.message);
-  const errorType = res.name;
-  if (errorType === "UnauthorizeError") {
+  const errorType = err.name;
+  if (errorType === "UnauthorizedError") {
+    console.log(1);
     res.send(
       new ForbiddenError("未登录，或者登录已经过期").formatErrorResponse()
     );

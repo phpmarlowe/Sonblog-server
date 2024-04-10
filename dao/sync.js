@@ -3,7 +3,7 @@ const { sequelize } = require("./dbConnect");
 
 const docModel = require("./model/docModel");
 const blogsModel = require("./model/blogsModel");
-
+const adminModel = require("./model/adminModel");
 (async function () {
   await sequelize.sync({
     alter: true,
