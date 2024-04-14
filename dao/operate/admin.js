@@ -11,7 +11,6 @@ module.exports.loginDao = async ({ loginAccount, loginPassword }) => {
 };
 module.exports.registerDao = async (registerInfo) => {
   //
-  console.log("reg");
   const dataValues = adminModel.create(registerInfo);
   return dataValues;
 };

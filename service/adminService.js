@@ -3,8 +3,22 @@ const { loginDao, registerDao } = require("../dao/operate/admin");
 const { ValidationError } = require("../utils/error");
 const { formatResponse, checkString } = require("../utils/tools");
 
-module.exports.loginService = (loginInfo) => {
+let expiresIn = 24 * 60 * 60; // 默认一天有效期
+module.exports.loginService = async (loginInfo) => {
   //登录只是为了拿 token , loginDao 只是查询有无此账号
+  let data = await loginDao(loginInfo);
+  if (!data) {
+    return new ValidationError("查无此人").formatErrorResponse();
+  } else {
+    console.log(data.dataValues);
+    const {
+      dataValues: { id, loginAccount, loginPassword },
+    } = data;
+    data = { id, loginAccount, loginPassword };
+    const token = jwt.sign(data, "xxx", { expiresIn });
+
+    return formatResponse(200, "登录成功", { ...data, token });
+  }
 };
 
 module.exports.registerService = async (registerInfo) => {
