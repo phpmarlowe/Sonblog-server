@@ -15,6 +15,7 @@ const whiteList = require("./whiteList");
 // ------------------------------------------------------------引入路由
 const blogsRouter = require("./api/blogs");
 const adminRouter = require("./api/admin");
+const pokemonRouter = require("./api/pokemon");
 // ------------------------------------------------------------使用各种中间件
 app.use(logger("dev"));
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use(
 // ------------------------------------------------------------自定义路由
 app.use("/blogs", blogsRouter);
 app.use("/admin", adminRouter);
+app.use("/pokemon", pokemonRouter);
 // ------------------------------------------------------------自定义错误处理
 app.use(function (req, res, next) {
   next(createError(404));

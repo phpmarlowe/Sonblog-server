@@ -4,10 +4,14 @@ const { sequelize } = require("./dbConnect");
 const docModel = require("./model/docModel");
 const blogsModel = require("./model/blogsModel");
 const adminModel = require("./model/adminModel");
+const pokemonModel = require("./model/pokemonModel");
+
+const pokemonData = require("./initData/pokemon");
 (async function () {
   await sequelize.sync({
     alter: true,
   });
+  // doc 初始化
   const docCount = await docModel.count();
   if (!docCount) {
     await docModel.bulkCreate([
@@ -148,4 +152,7 @@ const adminModel = require("./model/adminModel");
       },
     ]);
   }
+  // pokemon 初始化
+  const pokemonCount = await pokemonModel.count();
+  if (!pokemonCount) await pokemonModel.bulkCreate(pokemonData);
 })();
